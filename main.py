@@ -36,3 +36,9 @@ df = df.drop(columns_to_remove, axis=1)
 
 # Save the modified DataFrame back to a CSV file
 df.to_csv('Fuel_production_vs_consumption_modified.csv', index=False)
+
+
+'''
+https://paleobiodb.org/classic/displayDownloadGenerator
+https://www.kaggle.com/datasets/shawkatsujon/worldwide-fuel-production-and-consumption
+'''
