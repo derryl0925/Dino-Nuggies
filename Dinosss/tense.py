@@ -5,8 +5,6 @@ from tensorflow.keras.losses import BinaryCrossentropy
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.preprocessing.image import img_to_array, array_to_img
 from tensorflow.keras.layers import Input, Dense, Reshape, Conv2DTranspose, Conv2D, LeakyReLU, BatchNormalization
-import nltk
-from namesgenerator import RandomNameGenerator
 from PIL import Image
 import numpy as np
 import os
@@ -108,17 +106,15 @@ def get_user_input():
 
 # Function to generate a new dinosaur name
 def generate_new_name(dino1_name, dino2_name):
-    # Extract phonemes from names (using nltk)
-    name1_phonemes = nltk.corpus.cmudict.cmudict[dino1_name][0]
-    name2_phonemes = nltk.corpus.cmudict.cmudict[dino2_name][0]
+    min_overlap = min(len(dino1_name), len(dino2_name))
+    overlap_length = 0
+    for i in range(min_overlap):
+        if dino1_name[i] != dino2_name[i]:
+            break
+        overlap_length += 1
 
-    # Combine phonemes creatively (replace with your logic)
-    combined_phonemes = name1_phonemes[:2] + name2_phonemes[:2]
-
-    # Generate name based on phonemes using a name generator library
-    generator = RandomNameGenerator()
-    new_name = generator.generate_name(phonemes=combined_phonemes)
-    return new_name
+    combined_name = dino1_name[overlap_length:] + dino2_name[overlap_length:]
+    return combined_name.capitalize()
 
 # Main function to load images, generate new dinosaur, and display
 def main():
@@ -154,4 +150,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
