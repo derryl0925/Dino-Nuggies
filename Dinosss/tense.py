@@ -1,19 +1,30 @@
 import tensorflow as tf
 from PIL import Image
 import numpy as np
+import os
 
 # Function to find image by name
-def find_image(images, name):
-    for img_name, img in images.items():
-        if name.lower() in img_name.lower():
-            return img
+def find_image(images_folder, name):
+    for folder_name in os.listdir(images_folder):
+        if name.lower() in folder_name.lower():
+            dino_image_path = os.path.join(images_folder, folder_name, '2.png')
+            if os.path.exists(dino_image_path):
+                return Image.open(dino_image_path)
     return None
 
 # Function to blend two images
 def blend_images(image1, image2):
+    # Get the minimum dimensions of both images
+    min_width = min(image1.width, image2.width)
+    min_height = min(image1.height, image2.height)
+    
+    # Resize both images to have the same dimensions
+    resized_image1 = image1.resize((min_width, min_height))
+    resized_image2 = image2.resize((min_width, min_height))
+    
     # Convert images to numpy arrays
-    arr1 = np.array(image1)
-    arr2 = np.array(image2)
+    arr1 = np.array(resized_image1)
+    arr2 = np.array(resized_image2)
     
     # Blend images
     blended_image = (arr1 + arr2) // 2
@@ -42,14 +53,14 @@ def get_user_input():
 
 def main():
     # Load Dinosaur Dataset
-    images = 'archive/'
+    images_folder = '/Users/maana/Documents/Dinosss/dino'
 
     # Get User Input
     dino1_name, dino2_name = get_user_input()
 
     # Find corresponding images based on user input
-    dino1_image = find_image(images, dino1_name)
-    dino2_image = find_image(images, dino2_name)
+    dino1_image = find_image(images_folder, dino1_name)
+    dino2_image = find_image(images_folder, dino2_name)
 
     if dino1_image is None or dino2_image is None:
         print("One or both dinosaurs not found.")
