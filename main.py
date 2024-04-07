@@ -81,11 +81,19 @@ for col in hackoil_df.columns:
             hackoil_df[col] = hackoil_df[col].str.replace(',', '', regex=False)
 
 # Drop the 'subtype' column if it is empty or not needed
+print(hackoil_df)
+hackoil_df = hackoil_df.sort_values(by='dataType')
+print(hackoil_df)
+hackoil_df = hackoil_df[hackoil_df['dataType'] == 'PRODUCTION']
+hackoil_df.drop('dataType', axis=1, inplace=True, errors='ignore')
+print(hackoil_df)
+
+
 if 'subtype' in hackoil_df.columns:
     hackoil_df.drop('subtype', axis=1, inplace=True)
 
 # Drop the specified columns
-columns_to_drop = ['subtype', 'dataType', 'quality', 'sourceId']
+columns_to_drop = ['subtype', 'quality', 'sourceId']
 hackoil_df.drop(columns_to_drop, axis=1, inplace=True, errors='ignore')
 
 # Save the cleaned DataFrame back to a CSV file
@@ -93,22 +101,28 @@ hackoil_df.to_csv('hackOil_cleaned.csv', index=False)
 
 
 
+#fix the line under
+hackoil_df_2020 = hackoil_df[hackoil_df['year'] == '2018']
+#hackoil_df_2020 = hackoil_df_2020[hackoil_df_2020['dataType'] == 'production']
 
 
-hackoil_df_2020 = hackoil_df[hackoil_df['year'] == '2019']
 
 
+oil_df_2020 = hackoil_df_2020[hackoil_df_2020['fossilFuelType'] == 'gas']
+oil_df_2020['volume'] = pd.to_numeric(oil_df_2020['volume'].str.replace(r'\D', ''), errors='coerce')
 
-
-oil_df_2020 = hackoil_df_2020[hackoil_df_2020['fossilFuelType'] == 'oil']
+unit_column = oil_df_2020['unit']
 
 print(oil_df_2020)
 #combine the 2 data frames best on the abreaviation here
 
 
 oil_df_2020['volume'] = oil_df_2020['volume'].apply(lambda x: int(re.sub(r'\D', '', str(x))))
+print(oil_df_2020)
 
 grouped_oil_2020 = oil_df_2020.groupby('iso3166')['volume'].sum().reset_index()
+grouped_oil_2020['unit'] = 'million barrel a day'
+print(grouped_oil_2020)
 sorted_grouped_oil_2020 = grouped_oil_2020.sort_values(by='volume', ascending=False)
 
 #sorted_oil_2020 = grouped_oil_2020.sort_values(by='volume', ascending=True)
