@@ -12,6 +12,9 @@ df = pd.read_csv('DinoNuggieFindings.csv')
 # Columns to be removed
 columns_to_remove = ["occurrence_no", "record_type", "reid_no", "collection_no", "accepted_attr", "accepted_no", "max_ma", "min_ma", "reference_no", "time_bins", "time_contain", "time_major", "time_buffer", "time_overlap"]
 
+# Rename the 'accepted_name' column to 'name'
+df = df.rename(columns={'accepted_name': 'name'})
+
 # Remove the specified columns
 df = df.drop(columns_to_remove, axis=1)
 
