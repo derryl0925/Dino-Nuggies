@@ -8,6 +8,26 @@ Our project, "Dino Nuggies," ventures into the fascinating correlation between t
 
 Our predictive plot for 2025, based on data from 2020 and the quantity of dinosaur bones found in each country, aims to provide an insightful forecast into the future of energy resources.
 
+## Setup
+Your machine will need numpy, pandas, flask, seaborn, plotly, and matplotlib to run this code. To get any of these libraries, you can just `pip install [insert library here]` in a terminal window. To run the code, first pull the github to your computer and then navigate to the folder where app.py is. Then open terminal and run the command `python3 app.py`. This will direct you to a localhost website where you can interact with the product.
+
+## The Site
+
+### Homepage:
+![dinonuggies](static/images/pg1.png)
+
+### About:
+![about](static/images/pg2.png)
+
+### Plots:
+![plots](static/images/pg3.png)
+
+### Predictive Model:
+![predictive model](static/images/pg4.png)
+
+### Conclusion & References:
+![conclusion](static/images/pg5.png)
+
 ## Plots Overview
 
 1. **Dinosaur Bone Distribution:** A map indicating the number of dinosaur bones found in each country.
