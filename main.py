@@ -21,19 +21,19 @@ print(count_df)
 # Load the CSV file into a DataFrame
 #df = pd.read_csv('Fuel_production_vs_Consumption.csv')
 try:
-    df = pd.read_csv('Fuel_production_vs_Consumption.csv', encoding='utf-8')
+    df = pd.read_csv('Fuel_production_vs_Consumption.csv', encoding='utf-8')
 except UnicodeDecodeError:
-    df = pd.read_csv('Fuel_production_vs_Consumption.csv', encoding='latin1')
+    df = pd.read_csv('Fuel_production_vs_Consumption.csv', encoding='latin1')
 
 
 # Columns to be removed
 columns_to_remove = [
-    "Gas consumption(m³)", 
-    "Coal consumption(Ton)", 
-    "Oil consumption(m³)", 
-    "Gas consumption per capita(m³)", 
-    "Coal consumption per capita(Ton)", 
-    "Oil consumption per capita(m³)"
+    "Gas consumption(m³)", 
+    "Coal consumption(Ton)", 
+    "Oil consumption(m³)", 
+    "Gas consumption per capita(m³)", 
+    "Coal consumption per capita(Ton)", 
+    "Oil consumption per capita(m³)"
 ]
 
 # Remove the specified columns
