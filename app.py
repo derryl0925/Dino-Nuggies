@@ -12,18 +12,6 @@ def home():
     # You can return an HTML home page here if you like
     return render_template('index.html')
 
-@app.route('/api/dino_counts')
-def dino_counts_api():
-    # Convert DataFrame to JSON
-    data = dino_counts.to_json(orient='records')
-    return jsonify(data)
-
-@app.route('/api/fossil_fuel_production')
-def fossil_fuel_production_api():
-    # Convert DataFrame to JSON
-    data = fossil_fuel_production.to_json(orient='records')
-    return jsonify(data)
-
 if __name__ == '__main__':
     app.run(debug=True)
 
