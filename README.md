@@ -6,14 +6,14 @@ DataHacks 2024 team
 
 Our project, "Dino Nuggies," ventures into the fascinating correlation between the locations of dinosaur fossils and the modern-day geographic distribution of fossil fuel production. We present an interactive set of plots that showcase the historical resting places of dinosaurs juxtaposed with current data on oil, coal, and gas production across various countries.
 
-Our predictive plot for 2024, based on data from 2020 and the quantity of dinosaur bones found in each country, aims to provide an insightful forecast into the future of energy resources.
+Our predictive plot for 2025, based on data from 2020 and the quantity of dinosaur bones found in each country, aims to provide an insightful forecast into the future of energy resources.
 
 ## Plots Overview
 
 1. **Dinosaur Bone Distribution:** A map indicating the number of dinosaur bones found in each country.
 2. **Oil Production Analysis:** A visualization of oil production quantities by country, compared to the dinosaur bone distribution.
-3. **Coal and Gas Production:** Similar to the oil production plot, these maps show coal and gas production in each country in relation to dinosaur fossil sites.
-4. **Predictive Energy Plot for 2024:** Using historical data and dinosaur bone discoveries, we extrapolate a predictive model for potential fossil fuel production in the year 2024.
+3. **Bone and Oil Comparison:** Comparison between bone dinosaur bone distribution and oil production in each country.
+4. **Predictive Oil Production Plot for 2025:** Using historical data and dinosaur bone discoveries, we extrapolate a predictive model for potential oilproduction in the year 2025.
 
 ## Conclusion
 
@@ -30,13 +30,19 @@ We plan to refine our predictive models further and expand our dataset to cover 
 
 ## Technologies Used
 
-- Python for data analysis and predictive modeling
-- JavaScript and D3.js for interactive data visualizations
-- HTML/CSS for webpage structure and design
+- Python
+- HTML
+- CSS
+- matplotlib
+- seaborn
+- pandas
+- numpy
+- flask
+- plotly
 
 ## Credits
 
-This project has been a collaborative effort, and we would like to thank all those who contributed data, insights, and technical expertise.
+This project has been a collaborative effort between Ethan Perez and Derrick Lin
 
 ## License
 
