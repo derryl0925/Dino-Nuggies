@@ -1,55 +1,57 @@
 import pandas as pd
 import plotly.express as px
-import matplotlib.pyplot as plt
 
 # Load the dinosaur data
-dino_df = pd.read_csv('dinosaur_country_counts.csv')
+dino_df = pd.read_csv('DinoNuggieFindings_modified.csv')
 
-# Load the fossil fuel data
-fuel_df = pd.read_csv('Fuel_production_vs_consumption_modified.csv')
+# Load the cleaned fossil fuel data
+hackoil_df = pd.read_csv('hackOil_cleaned.csv')
 
-# Sample data for demonstration
-# Assume your dataframes are already structured correctly
-
-# Dinosaur data
-dino_data = pd.read_csv('dinosaur_country_counts.csv')
-
-# Fuel production data
-try:
-    fuel_df = pd.read_csv('Fuel_production_vs_Consumption.csv', encoding='utf-8')
-except UnicodeDecodeError:
-    fuel_df = pd.read_csv('Fuel_production_vs_Consumption.csv', encoding='latin1')
-
-
-fuel_df['Entity'] = fuel_df['Entity'].str.strip()  # Remove leading/trailing whitespaces
-dino_df['cc'] = dino_df['cc'].str.strip()          # Remove leading/trailing whitespaces
+# Strip leading/trailing whitespaces from country codes if necessary
+hackoil_df['iso3166'] = hackoil_df['iso3166'].str.strip()  # Adjust column name if different
+dino_df['cc'] = dino_df['cc'].str.strip()
 
 # Aggregate fossil fuel production by country
-fuel_production_by_country = fuel_df.groupby('Entity').sum().reset_index()
+# Ensure you're summing up the correct column for total production, 
+# adjust 'volume' to the correct column name for total production in your data
+fuel_production_by_country = hackoil_df.groupby('iso3166')['volume'].sum().reset_index()
 
 # Aggregate dinosaur findings by country
 dino_findings_by_country = dino_df.groupby('cc').size().reset_index(name='dino_count')
 
-# Merge the datasets on country
+# Merge the datasets on the country code
 merged_data = pd.merge(fuel_production_by_country, dino_findings_by_country,
-                       how='outer', left_on='Entity', right_on='cc').fillna(0)
+                       how='outer', left_on='iso3166', right_on='cc').fillna(0)
 
-# Plot the data on a world map
-fig = px.choropleth(merged_data, 
-                    locations='Entity',
-                    locationmode='country names',
-                    color='dino_count',
-                    hover_name='Entity',
-                    hover_data={'dino_count': True, 'Gas production(m³)': True,
-                                'Coal production(Ton)': True, 'Oil production(m³)': True},
-                    color_continuous_scale='blues',
-                    labels={'dino_count': 'Dinosaur Findings', 
-                            'Gas production(m³)': 'Gas Production', 
-                            'Coal production(Ton)': 'Coal Production', 
-                            'Oil production(m³)': 'Oil Production'},
-                    title='Dinosaur Findings vs Fossil Fuel Production by Country')
+# Plot the data on a world map with adjusted color scale and layout
+fig = px.choropleth(
+    merged_data, 
+    locations='iso3166',
+    color='dino_count',
+    hover_name='iso3166',
+    hover_data={'dino_count': True, 'volume': True},
+    color_continuous_scale=px.colors.sequential.Plasma,  # More distinct color scale
+    range_color=[0, merged_data['dino_count'].max()],  # Set the range of the color scale
+    title='Dinosaur Findings vs Fossil Fuel Production by Country'
+)
 
-fig.update_geos(showcountries=True)
+# Update map layout for better visibility
+fig.update_geos(
+    showcountries=True,
+    showcoastlines=True,
+    showland=True,
+    landcolor='LightGrey'
+)
+
+fig.update_layout(
+    margin={"r":0,"t":0,"l":0,"b":0},
+    coloraxis_colorbar=dict(
+        title='Dinosaur Findings',
+        tickvals=[0, merged_data['dino_count'].max() / 2, merged_data['dino_count'].max()],
+        ticktext=['Low', 'Medium', 'High']
+    )
+)
 
 # Show the map
 fig.show()
+
