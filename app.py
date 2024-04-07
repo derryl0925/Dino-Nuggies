@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template
+'''from flask import Flask, jsonify, render_template
 import pandas as pd
 import plotly.express as px
 from plotly.io import to_html
@@ -28,7 +28,7 @@ def home():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
+'''
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -80,6 +80,7 @@ for col in hackoil_df.columns:
 #hackoil_df = hackoil_df.sort_values(by='dataType')
 
 hackoil_df = hackoil_df[hackoil_df['dataType'] == 'PRODUCTION']
+hackoil_df = hackoil_df[hackoil_df['dataType'] == 'PROJECTION']
 #print(hackoil_df)
 
 hackoil_df.drop('dataType', axis=1, inplace=True, errors='ignore')
@@ -146,6 +147,7 @@ merged_df.rename(columns={'iso3166': 'country'}, inplace=True)
 print(merged_df)
 merged_df.to_csv('merged_data.csv', index=False)
 #print(sorted_grouped_oil_2020)
+
 
 
 #print("Missing countries:", missing_countries)
