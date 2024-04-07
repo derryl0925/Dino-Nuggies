@@ -64,6 +64,21 @@ print(sorted_gas_df)
 print("\nMost coal production:")
 print(sorted_coal_df)
 
+# Load the CSV file into a DataFrame, addressing the DtypeWarning by setting low_memory=False
+hackoil_df = pd.read_csv('hackOil.csv', low_memory=False)
+
+# Check the actual column names in the DataFrame
+print(hackoil_df.columns)
+
+# Columns to be removed (update this list if the actual names are different)
+columns_to_remove = ["unit", "dataType", "quality", "sourceID", "grade"]
+
+# Make sure the columns you want to remove actually exist in the DataFrame
+existing_columns = [col for col in columns_to_remove if col in hackoil_df.columns]
+
+# Remove the specified columns that exist
+hackoil_df = hackoil_df.drop(existing_columns, axis=1)
+
 # Links to data sources (for reference only, not executed as code)
 # https://paleobiodb.org/classic/displayDownloadGenerator
 # https://www.kaggle.com/datasets/shawkatsujon/worldwide-fuel-production-and-consumption
