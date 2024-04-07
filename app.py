@@ -1,3 +1,32 @@
+from flask import Flask, jsonify
+import pandas as pd
+
+app = Flask(__name__)
+
+# Load the data into Pandas DataFrames
+dino_counts = pd.read_csv('dinosaur_country_counts.csv')
+fossil_fuel_production = pd.read_csv('hackOil_cleaned.csv')
+
+@app.route('/')
+def home():
+    # You can return an HTML home page here if you like
+    return "Welcome to the Dinosaur & Fossil Fuel Correlation API!"
+
+@app.route('/api/dino_counts')
+def dino_counts_api():
+    # Convert DataFrame to JSON
+    data = dino_counts.to_json(orient='records')
+    return jsonify(data)
+
+@app.route('/api/fossil_fuel_production')
+def fossil_fuel_production_api():
+    # Convert DataFrame to JSON
+    data = fossil_fuel_production.to_json(orient='records')
+    return jsonify(data)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
