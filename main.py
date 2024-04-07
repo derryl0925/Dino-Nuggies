@@ -1,8 +1,9 @@
-import pandas as bpd
+import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
 plt.style.use('ggplot')
+
 
 # Cleaning Dinosaur data
 # Load the CSV file into a DataFrame
@@ -19,7 +20,7 @@ df.to_csv('DinoNuggieFindings_modified.csv', index=False)
 
 # Cleaning fossil fuel data
 # Load the CSV file into a DataFrame
-df = pd.read_csv('Fuel production vs consumption.csv')
+df = pd.read_csv('Fuel_production_vs_Consumption.csv')
 
 # Columns to be removed
 columns_to_remove = [
