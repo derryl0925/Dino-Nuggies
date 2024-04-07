@@ -1,69 +1,62 @@
 import pandas as pd
-import plotly.graph_objects as go
+from mpl_toolkits.basemap import Basemap
+import matplotlib.pyplot as plt
 
-# Load your data
-dino_counts = pd.read_csv('dinosaur_country_counts.csv').rename(columns={'cc': 'iso3166'})
-fossil_fuel_production = pd.read_csv('hackOil_cleaned.csv')
+# Error Handling and Certificate Verification
 
-# Convert 'volume' to a numeric type, ensuring non-numeric characters are removed
-fossil_fuel_production['volume'] = pd.to_numeric(
-    fossil_fuel_production['volume'].str.replace(',', '', regex=True), errors='coerce'
+from geopy.geocoders import Nominatim
+from certifi import where
+
+
+# Load the data from CSV files
+dino_data = pd.read_csv("dinosaur_country_counts.csv")
+oil_data = pd.read_csv("hackOil.csv")
+
+# Filter for oil data (considering only data for UAE for simplicity)
+oil_data_filtered = oil_data[oil_data["iso3166"] == "ae"]
+
+# Get the latitude and longitude data from the ISO codes (using geopy)
+geolocator = Nominatim(user_agent="my-script", ssl_context=ssl.create_default_context(cafile=where()))
+
+def get_lat_lon(iso_code):
+  location = geolocator.geocode(iso_code)
+  if location:
+    return location.latitude, location.longitude
+  else:
+    print(f"Warning: Could not geocode ISO code: {iso_code}")
+    return None, None  # Handle missing locations gracefully
+
+# Get latitude and longitude for dino data
+dino_data["latitude"], dino_data["longitude"] = zip(
+    *dino_data["iso3166"].apply(get_lat_lon)
 )
 
-# Ensure 'iso3166' is a string and strip any whitespace
-dino_counts['iso3166'] = dino_counts['iso3166'].astype(str).str.strip()
-fossil_fuel_production['iso3166'] = fossil_fuel_production['iso3166'].astype(str).str.strip()
+# Get latitude and longitude for oil data (assuming single country)
+oil_latitude, oil_longitude = get_lat_lon("ae")
 
-# Aggregate fossil fuel production by country
-fossil_fuel_totals = fossil_fuel_production.groupby('iso3166')['volume'].sum().reset_index()
+# Create a Basemap projection
+worldmap = Basemap(projection="millers", llcrnrlat=-80, urcrnrlat=80, llcrnrlon=-180, urcrnrlon=180)
 
-# Merge the datasets on the country code
-merged_data = pd.merge(dino_counts, fossil_fuel_totals, on='iso3166', how='outer').fillna(0)
+# Convert dinosaur data latitude and longitude to map projection coordinates
+dino_x, dino_y = worldmap(dino_data["longitude"], dino_data["latitude"])
 
-# Define country centroids for plotting
-country_centroids = {
-    # ... include all necessary country centroids
-}
+# Plot the dinosaur markers (adjust marker size and color as desired)
+worldmap.scatter(dino_x, dino_y, s=50, c="red", alpha=0.7, label="Dinosaur Fossils")
 
-# Initialize the figure
-fig = go.Figure()
+# Plot the oil production marker (assuming single country)
+oil_x, oil_y = worldmap.convert(oil_longitude, oil_latitude)
+worldmap.plot(oil_x, oil_y, marker="o", markersize=20, color="blue", label="Oil Production")
 
-# Add a choropleth layer for dinosaur findings
-fig.add_trace(go.Choropleth(
-    locations=merged_data['iso3166'],  # Use merged data iso3166
-    z=merged_data['count'],  # Dinosaur counts
-    colorscale='Viridis',
-    marker_line_color='darkgray',
-    marker_line_width=0.5,
-    colorbar_title='Dinosaur Findings',
-))
+# Draw coastlines and political boundaries
+worldmap.drawcoastlines()
+worldmap.drawcountries()
 
-# Iterate over merged_data instead of just iso3166
-for _, row in merged_data.iterrows():
-    # Use the iso3166 value from the current row
-    iso3166 = row['iso3166']
-    if iso3166 in country_centroids:
-        fig.add_trace(go.Scattergeo(
-            lon=[country_centroids[iso3166]['lon']],
-            lat=[country_centroids[iso3166]['lat']],
-            text=f"{iso3166}: {row['volume']}",
-            marker=dict(
-                size=row['volume'] / 1000,  # Adjust the size
-                color='red',
-                symbol='x'
-            ),
-        ))
+# Fill continents (optional)
+worldmap.fillcontinents(color='lightgray')
 
-# Update layout for better visibility
-fig.update_layout(
-    title_text='Dinosaur Findings and Fossil Fuel Production by Country',
-    geo=dict(
-        showland=True,
-        showcountries=True,
-        landcolor='rgb(217, 217, 217)',
-        countrycolor='rgb(204, 204, 204)',
-    ),
-)
+# Add a title and legend
+plt.title("Dinosaur Fossils and Oil Production (Sample Data)")
+plt.legend()
 
-# Show the figure
-fig.show()
+# Display the map
+plt.show()
