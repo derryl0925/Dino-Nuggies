@@ -1,9 +1,9 @@
-'''from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template
 import pandas as pd
 import plotly.express as px
 from plotly.io import to_html
 
-#app = Flask(__name__)
+app = Flask(__name__)
 
 # Load the data into Pandas DataFrames
 dino_counts = pd.read_csv('dinosaur_country_counts.csv')
@@ -28,7 +28,7 @@ def home():
 
 if __name__ == '__main__':
     app.run(debug=True)
-'''
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
