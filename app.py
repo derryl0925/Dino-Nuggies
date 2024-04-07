@@ -1,4 +1,4 @@
-'''from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template
 import pandas as pd
 import plotly.express as px
 from plotly.io import to_html
@@ -28,7 +28,7 @@ def home():
 
 if __name__ == '__main__':
     app.run(debug=True)
-'''
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt

@@ -389,3 +389,43 @@ a {
     align-items: center;     /* Center vertically */
     height: 100%;            /* Make sure the container is as tall as its parent */
 }
+
+.custom-size-1 {
+    width: 900px; /* Or any other size */
+    height: auto; /* Maintain aspect ratio */
+	position: absolute;
+  	top: 550px; /* Distance from the top of the parent element */
+  	left: 50px; /* Distance from the left of the parent element */
+}
+
+.custom-size-2 {
+    width: 900px; /* Or any other size */
+    height: auto; /* Maintain aspect ratio */
+	position: absolute;
+  	top: 550px; /* Distance from the top of the parent element */
+  	left: 600px; /* Distance from the left of the parent element */
+}
+
+.custom-size-3 {
+    width: 900px; /* Or any other size */
+    height: auto; /* Maintain aspect ratio */
+	position: absolute;
+  	top: 550px; /* Distance from the top of the parent element */
+  	left: 1050px; /* Distance from the left of the parent element */
+}
+
+.plots-container {
+    display: flex;
+    justify-content: space-around; /* Distributes space evenly around the items */
+    align-items: flex-start; /* Aligns items at the start of the cross axis */
+    flex-wrap: wrap; /* Allows the items to wrap onto the next line */
+    padding-top: 20px; /* Adds space between the text and the images */
+}
+
+.custom-size-1, .custom-size-2, .custom-size-3{
+    max-width: 650px; /* Sets the maximum width for both images */
+    height: auto; /* Maintains the aspect ratio */
+    margin: 0 10px; /* Adds some horizontal space between the images */
+    /* If the images have different widths, you can override this in the specific class */
+}
+
