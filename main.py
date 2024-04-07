@@ -20,7 +20,12 @@ df.to_csv('DinoNuggieFindings_modified.csv', index=False)
 
 # Cleaning fossil fuel data
 # Load the CSV file into a DataFrame
-df = pd.read_csv('Fuel_production_vs_Consumption.csv')
+#df = pd.read_csv('Fuel_production_vs_Consumption.csv')
+try:
+    df = pd.read_csv('Fuel_production_vs_Consumption.csv', encoding='utf-8')
+except UnicodeDecodeError:
+    df = pd.read_csv('Fuel_production_vs_Consumption.csv', encoding='latin1')
+
 
 # Columns to be removed
 columns_to_remove = [
