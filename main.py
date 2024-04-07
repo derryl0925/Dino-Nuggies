@@ -1,98 +1,69 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import pycountry
 
-
+# Set the style for matplotlib plots
 plt.style.use('ggplot')
 
-country_abbr = {country.name: country.alpha_2 for country in pycountry.countries}
+# ----- Cleaning Dinosaur Data -----
+# Load the dinosaur data, selecting only the 'cc' column which contains country codes
+dino_df = pd.read_csv('dinoData.csv', usecols=['cc'])
 
-# Cleaning Dinosaur data
-# Load the CSV file into a DataFrame
-#df = pd.read_csv('dinoData.csv')
-df = pd.read_csv('dinoData.csv', usecols=['cc'])
-
-
-# Save the modified DataFrame back to a CSV file
-df.to_csv('dinoDataClean.csv', index=False)
-count_df = df.groupby('cc').size().reset_index(name='count')
+# Count the occurrences of each country code and sort by this count in descending order
+count_df = dino_df.groupby('cc').size().reset_index(name='count')
 count_df = count_df.sort_values(by='count', ascending=False)
 
+# Save the clean data with country occurrences to a CSV file
+count_df.to_csv('dinosaur_country_counts.csv', index=False)
 
+# Print the sorted country counts to verify the operation was successful
 print(count_df)
 
-# Cleaning fossil fuel data
-# Load the CSV file into a DataFrame
-#df = pd.read_csv('Fuel_production_vs_Consumption.csv')
+# ----- Cleaning Fossil Fuel Data -----
+# Attempt to load the fossil fuel data with UTF-8 encoding, falling back to latin1 if necessary
 try:
-    df = pd.read_csv('Fuel_production_vs_Consumption.csv', encoding='utf-8')
+    fuel_df = pd.read_csv('Fuel_production_vs_Consumption.csv', encoding='utf-8')
 except UnicodeDecodeError:
-    df = pd.read_csv('Fuel_production_vs_Consumption.csv', encoding='latin1')
+    fuel_df = pd.read_csv('Fuel_production_vs_Consumption.csv', encoding='latin1')
 
-
-# Columns to be removed
+# List columns that are not required for further analysis
 columns_to_remove = [
-    "Gas consumption(m³)", 
-    "Coal consumption(Ton)", 
-    "Oil consumption(m³)", 
-    "Gas consumption per capita(m³)", 
-    "Coal consumption per capita(Ton)", 
+    "Gas consumption(m³)",
+    "Coal consumption(Ton)",
+    "Oil consumption(m³)",
+    "Gas consumption per capita(m³)",
+    "Coal consumption per capita(Ton)",
     "Oil consumption per capita(m³)"
 ]
 
-# Remove the specified columns
-df = df.drop(columns_to_remove, axis=1)
+# Drop the unnecessary columns from the fossil fuel data
+fuel_df = fuel_df.drop(columns_to_remove, axis=1)
 
-grouped_df = df.groupby('Entity').sum()
+# Aggregate the remaining data by 'Entity', which represents countries, excluding the 'World' entry
+grouped_df = fuel_df.groupby('Entity').sum()
 grouped_df = grouped_df.drop(index='World', errors='ignore')
-grouped_df.reset_index(inplace=True)
 
-# Define a dictionary mapping country names to their abbreviations
-grouped_df['Entity'] = grouped_df['Entity'].map(country_abbr)
-
-# Replace the country names in grouped_df with their abbreviations
-#grouped_df['Entity'] = grouped_df['Entity'].map(country_abbr)
-# Alternatively, you can use the replace function
-# grouped_df['Entity'].replace(country_abbr, inplace=True)
-
+# Print the aggregated data to verify the operation was successful
 print(grouped_df)
 
+# Save the cleaned and aggregated fossil fuel data to a CSV file
+grouped_df.to_csv('Fuel_production_vs_consumption_modified.csv', index=False)
 
-print(grouped_df)
-
-# Save the modified DataFrame back to a CSV file
-df.to_csv('Fuel_production_vs_consumption_modified.csv', index=False)
-
+# Sort the data by production metrics for different fuel types
 sorted_oil_df = grouped_df.sort_values(by='Oil production(m³)', ascending=False)
-
-# Sort by most gas production
 sorted_gas_df = grouped_df.sort_values(by='Gas production(m³)', ascending=False)
-
-# Sort by most coal production
 sorted_coal_df = grouped_df.sort_values(by='Coal production(Ton)', ascending=False)
 
+# Print the sorted data for each fuel type to verify the operation was successful
 print("Most oil production:")
-#print(sorted_oil_df)
+print(sorted_oil_df)
 
 print("\nMost gas production:")
-#print(sorted_gas_df)
+print(sorted_gas_df)
 
 print("\nMost coal production:")
-#print(sorted_coal_df)
+print(sorted_coal_df)
 
-
-#merged_df_oil = pd.merge(count_df, sorted_oil_df, left_on='cc', right_index=True, how='inner')
-#merged_df_oil.drop('Entity', axis=1, inplace=True)
-#merged_df_oil.to_csv('merged_data_oil.csv', index=False)
-#print(merged_df_oil)
-
-
-
-
-
-
-'''
-https://paleobiodb.org/classic/displayDownloadGenerator
-https://www.kaggle.com/datasets/shawkatsujon/worldwide-fuel-production-and-consumption
-'''
+# Links to data sources (for reference only, not executed as code)
+# https://paleobiodb.org/classic/displayDownloadGenerator
+# https://www.kaggle.com/datasets/shawkatsujon/worldwide-fuel-production-and-consumption

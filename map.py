@@ -3,7 +3,7 @@ import plotly.express as px
 import matplotlib.pyplot as plt
 
 # Load the dinosaur data
-dino_df = pd.read_csv('DinoNuggieFindings_modified.csv')
+dino_df = pd.read_csv('dinosaur_country_counts.csv')
 
 # Load the fossil fuel data
 fuel_df = pd.read_csv('Fuel_production_vs_consumption_modified.csv')
@@ -12,7 +12,7 @@ fuel_df = pd.read_csv('Fuel_production_vs_consumption_modified.csv')
 # Assume your dataframes are already structured correctly
 
 # Dinosaur data
-dino_data = pd.read_csv('DinoNuggieFindings.csv')
+dino_data = pd.read_csv('dinosaur_country_counts.csv')
 
 # Fuel production data
 try:
