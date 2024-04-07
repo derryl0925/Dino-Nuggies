@@ -2,7 +2,7 @@ import pandas as pd
 import plotly.graph_objects as go
 
 # Load your data
-dino_counts = pd.read_csv('dinosaur_country_counts.csv')
+dino_counts = pd.read_csv('dinosaur_country_counts.csv').rename(columns={'cc': 'iso3166'})
 fossil_fuel_production = pd.read_csv('hackOil_cleaned.csv')
 
 # Convert 'volume' to a numeric type, ensuring non-numeric characters are removed
@@ -10,24 +10,19 @@ fossil_fuel_production['volume'] = pd.to_numeric(
     fossil_fuel_production['volume'].str.replace(',', '', regex=True), errors='coerce'
 )
 
-# Ensure 'cc' is a string and strip any whitespace
-dino_counts['cc'] = dino_counts['cc'].astype(str).str.strip()
-fossil_fuel_production['cc'] = fossil_fuel_production['cc'].astype(str).str.strip()
+# Ensure 'iso3166' is a string and strip any whitespace
+dino_counts['iso3166'] = dino_counts['iso3166'].astype(str).str.strip()
+fossil_fuel_production['iso3166'] = fossil_fuel_production['iso3166'].astype(str).str.strip()
 
 # Aggregate fossil fuel production by country
-fossil_fuel_totals = fossil_fuel_production.groupby('cc')['volume'].sum().reset_index()
+fossil_fuel_totals = fossil_fuel_production.groupby('iso3166')['volume'].sum().reset_index()
 
 # Merge the datasets on the country code
-merged_data = pd.merge(dino_counts, fossil_fuel_totals, on='cc', how='outer').fillna(0)
+merged_data = pd.merge(dino_counts, fossil_fuel_totals, on='iso3166', how='outer').fillna(0)
 
-# Country centroids for demonstration purposes (usually obtained from a reliable source)
+# Define country centroids for plotting
 country_centroids = {
-    'US': {'lat': 37.0902, 'lon': -95.7129},
-    'CA': {'lat': 56.1304, 'lon': -106.3468},
-    'ES': {'lat': 40.4637, 'lon': -3.7492},
-    'CN': {'lat': 35.8617, 'lon': 104.1954},
-    'NZ': {'lat': -40.9006, 'lon': 174.8860},
-    # ... additional countries
+    # ... include all necessary country centroids
 }
 
 # Initialize the figure
@@ -35,24 +30,25 @@ fig = go.Figure()
 
 # Add a choropleth layer for dinosaur findings
 fig.add_trace(go.Choropleth(
-    locations=dino_counts['cc'],  # Country codes column
-    z=dino_counts['count'],  # Data column for color scale
-    text=dino_counts['cc'],  # Hover text
+    locations=merged_data['iso3166'],  # Use merged data iso3166
+    z=merged_data['count'],  # Dinosaur counts
     colorscale='Viridis',
     marker_line_color='darkgray',
     marker_line_width=0.5,
     colorbar_title='Dinosaur Findings',
 ))
 
-# Add scatter points for each country's fossil fuel production
-for cc, row in merged_data.iterrows():
-    if cc in country_centroids:
+# Iterate over merged_data instead of just iso3166
+for _, row in merged_data.iterrows():
+    # Use the iso3166 value from the current row
+    iso3166 = row['iso3166']
+    if iso3166 in country_centroids:
         fig.add_trace(go.Scattergeo(
-            lon=[country_centroids[cc]['lon']],
-            lat=[country_centroids[cc]['lat']],
-            text=f"{cc}: {row['volume']}",  # Customize this text as needed
+            lon=[country_centroids[iso3166]['lon']],
+            lat=[country_centroids[iso3166]['lat']],
+            text=f"{iso3166}: {row['volume']}",
             marker=dict(
-                size=row['volume'] / 1000,  # Adjust the size as necessary
+                size=row['volume'] / 1000,  # Adjust the size
                 color='red',
                 symbol='x'
             ),
