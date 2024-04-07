@@ -4,7 +4,7 @@ DataHacks 2024 team
 ![Our Logo](static/images/DinoNuggies.png)
 # Dino Nuggies: Dinosaurs and Modern Energy Analysis
 
-Our project, "Dino Nuggies," ventures into the fascinating correlation between the locations of dinosaur fossils and the modern-day geographic distribution of fossil fuel production. We present an interactive set of plots that showcase the historical resting places of dinosaurs juxtaposed with current data on oil, coal, and gas production across various countries.
+Our project, "Dino Nuggies," ventures into the fascinating correlation between the locations of dinosaur fossils and the modern-day geographic distribution of fossil fuel production. We present a set of plots that showcase the historical resting places of dinosaurs juxtaposed with current data on oil, coal, and gas production across various countries.
 
 Our predictive plot for 2025, based on data from 2020 and the quantity of dinosaur bones found in each country, aims to provide an insightful forecast into the future of energy resources.
 
