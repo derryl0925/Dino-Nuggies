@@ -1,5 +1,7 @@
 from flask import Flask, jsonify, render_template
 import pandas as pd
+import plotly.express as px
+from plotly.io import to_html
 
 app = Flask(__name__)
 
@@ -9,8 +11,20 @@ fossil_fuel_production = pd.read_csv('hackOil_cleaned.csv')
 
 @app.route('/')
 def home():
-    # You can return an HTML home page here if you like
-    return render_template('index.html')
+    # Read the CSV data into Pandas DataFrames
+    dino_df = pd.read_csv('dinosaur_country_counts.csv')
+    fossil_fuel_df = pd.read_csv('hackOil_cleaned.csv')
+
+   # Example of creating a Plotly figure from the dataframe
+    fig_dino = px.bar(dino_df, x='iso3166', y='count', title='Dinosaur Findings by Country')
+    fig_fossil_fuel = px.bar(fossil_fuel_df, x='iso3166', y='volume', title='Fossil Fuel Production by Country')
+
+    # Convert the figures to HTML components
+    plot_dino_html = to_html(fig_dino, full_html=False)
+    plot_fossil_fuel_html = to_html(fig_fossil_fuel, full_html=False)
+
+    # Pass the HTML components to the template
+    return render_template('index.html', plot_dino_html=plot_dino_html, plot_fossil_fuel_html=plot_fossil_fuel_html)
 
 if __name__ == '__main__':
     app.run(debug=True)

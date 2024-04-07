@@ -1,1 +1,59 @@
-css
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  
+  .container {
+    width: 80%;
+    margin: 20px auto;
+  }
+  
+  h1 {
+    text-align: center;
+    color: #2c3e50;
+  }
+  
+  #dino-plot, #fossil-fuel-plot {
+    margin-bottom: 40px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .plot-title {
+    font-size: 18px;
+    margin-bottom: 10px;
+    text-align: center;
+    color: #34495e;
+  }
+  
+  /* If you have any controls or buttons, you can style them here */
+  .button {
+    display: block;
+    width: 200px;
+    margin: 20px auto;
+    padding: 10px;
+    font-size: 16px;
+    color: white;
+    background-color: #3498db;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+  }
+  
+  .button:hover {
+    background-color: #2980b9;
+  }
+  
+  /* Adjust the height of the plots as needed */
+  .plotly-graph-div {
+    height: 500px; /* Adjust this value based on your content */
+  }
+  

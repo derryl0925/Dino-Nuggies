@@ -2,72 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dinosaur Fusion</title>
-    <style>
-        .dino-box {
-            border: 2px solid black;
-            margin: 10px;
-            padding: 10px;
-            display: inline-block;
-            cursor: pointer;
-            transition: background-color 0.2s; /* Smooth background color transition */
-        }
-
-        .selected {
-            border: 2px solid red;
-            background-color: lightgrey; /* Highlight selected dinosaurs */
-        }
-
-        #continue-button {
-            display: none;
-            margin: 20px;
-            padding: 10px;
-        }
-
-        #result {
-            margin-top: 20px;
-        }
-    </style>
+    <title>Dinosaur & Fossil Fuel Correlation Visualization</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> <!-- Plotly JS library -->
 </head>
 <body>
-    <h1>Select Two Dinosaurs to Fuse</h1>
-    <div id="dinosaur-selection">
-        <div id="Ankylosaurus" class="dino-box" onclick="selectDinosaur('Ankylosaurus')">Ankylosaurus</div>
-        <div id="Brontosaurus" class="dino-box" onclick="selectDinosaur('Brontosaurus')">Brontosaurus</div>
-        <div id="Pterodactyl" class="dino-box" onclick="selectDinosaur('Pterodactyl')">Pterodactyl</div>
-        <div id="T-Rex" class="dino-box" onclick="selectDinosaur('T-Rex')">T-Rex</div>
-        <div id="Triceratops" class="dino-box" onclick="selectDinosaur('Triceratops')">Triceratops</div>
+    <h1>Dinosaur & Fossil Fuel Correlation Visualization</h1>
+    <div id="dino-plot">
+        <!-- Dinosaur plot will be inserted here -->
+        {{ plot_dino_html|safe }}
     </div>
-
-    <button id="continue-button" onclick="generateFusion()">Continue</button>
-
-    <div id="result">
-        <!-- The final fused dinosaur image and name will be displayed here -->
+    <div id="fossil-fuel-plot">
+        <!-- Fossil fuel plot will be inserted here -->
+        {{ plot_fossil_fuel_html|safe }}
     </div>
-
-    <script>
-        let selectedDinosaurs = [];
-
-        function selectDinosaur(name) {
-            const box = document.getElementById(name);
-            if (selectedDinosaurs.includes(name)) {
-                selectedDinosaurs = selectedDinosaurs.filter(dino => dino !== name);
-                box.classList.remove('selected');
-            } else {
-                if (selectedDinosaurs.length < 2) {
-                    selectedDinosaurs.push(name);
-                    box.classList.add('selected');
-                }
-            }
-
-            document.getElementById('continue-button').style.display = selectedDinosaurs.length === 2 ? 'block' : 'none';
-        }
-
-        function generateFusion() {
-            // Placeholder for image generation logic
-            const fusedName = selectedDinosaurs.join('-');
-            document.getElementById('result').innerHTML = `<h2>Fused Dinosaur: ${fusedName}</h2><img src="image_url_goes_here" alt="${fusedName}" />`;
-        }
-    </script>
 </body>
 </html>
