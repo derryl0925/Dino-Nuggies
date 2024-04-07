@@ -1,57 +1,73 @@
 import pandas as pd
-import plotly.express as px
+import plotly.graph_objects as go
 
-# Load the dinosaur data
-dino_df = pd.read_csv('DinoNuggieFindings_modified.csv')
+# Load your data
+dino_counts = pd.read_csv('dinosaur_country_counts.csv')
+fossil_fuel_production = pd.read_csv('hackOil_cleaned.csv')
 
-# Load the cleaned fossil fuel data
-hackoil_df = pd.read_csv('hackOil_cleaned.csv')
+# Convert 'volume' to a numeric type, ensuring non-numeric characters are removed
+fossil_fuel_production['volume'] = pd.to_numeric(
+    fossil_fuel_production['volume'].str.replace(',', '', regex=True), errors='coerce'
+)
 
-# Strip leading/trailing whitespaces from country codes if necessary
-hackoil_df['iso3166'] = hackoil_df['iso3166'].str.strip()  # Adjust column name if different
-dino_df['cc'] = dino_df['cc'].str.strip()
+# Ensure 'cc' is a string and strip any whitespace
+dino_counts['cc'] = dino_counts['cc'].astype(str).str.strip()
+fossil_fuel_production['cc'] = fossil_fuel_production['cc'].astype(str).str.strip()
 
 # Aggregate fossil fuel production by country
-# Ensure you're summing up the correct column for total production, 
-# adjust 'volume' to the correct column name for total production in your data
-fuel_production_by_country = hackoil_df.groupby('iso3166')['volume'].sum().reset_index()
-
-# Aggregate dinosaur findings by country
-dino_findings_by_country = dino_df.groupby('cc').size().reset_index(name='dino_count')
+fossil_fuel_totals = fossil_fuel_production.groupby('cc')['volume'].sum().reset_index()
 
 # Merge the datasets on the country code
-merged_data = pd.merge(fuel_production_by_country, dino_findings_by_country,
-                       how='outer', left_on='iso3166', right_on='cc').fillna(0)
+merged_data = pd.merge(dino_counts, fossil_fuel_totals, on='cc', how='outer').fillna(0)
 
-# Plot the data on a world map with adjusted color scale and layout
-fig = px.choropleth(
-    merged_data, 
-    locations='iso3166',
-    color='dino_count',
-    hover_name='iso3166',
-    hover_data={'dino_count': True, 'volume': True},
-    color_continuous_scale=px.colors.sequential.Plasma,  # More distinct color scale
-    range_color=[0, merged_data['dino_count'].max()],  # Set the range of the color scale
-    title='Dinosaur Findings vs Fossil Fuel Production by Country'
-)
+# Country centroids for demonstration purposes (usually obtained from a reliable source)
+country_centroids = {
+    'US': {'lat': 37.0902, 'lon': -95.7129},
+    'CA': {'lat': 56.1304, 'lon': -106.3468},
+    'ES': {'lat': 40.4637, 'lon': -3.7492},
+    'CN': {'lat': 35.8617, 'lon': 104.1954},
+    'NZ': {'lat': -40.9006, 'lon': 174.8860},
+    # ... additional countries
+}
 
-# Update map layout for better visibility
-fig.update_geos(
-    showcountries=True,
-    showcoastlines=True,
-    showland=True,
-    landcolor='LightGrey'
-)
+# Initialize the figure
+fig = go.Figure()
 
+# Add a choropleth layer for dinosaur findings
+fig.add_trace(go.Choropleth(
+    locations=dino_counts['cc'],  # Country codes column
+    z=dino_counts['count'],  # Data column for color scale
+    text=dino_counts['cc'],  # Hover text
+    colorscale='Viridis',
+    marker_line_color='darkgray',
+    marker_line_width=0.5,
+    colorbar_title='Dinosaur Findings',
+))
+
+# Add scatter points for each country's fossil fuel production
+for cc, row in merged_data.iterrows():
+    if cc in country_centroids:
+        fig.add_trace(go.Scattergeo(
+            lon=[country_centroids[cc]['lon']],
+            lat=[country_centroids[cc]['lat']],
+            text=f"{cc}: {row['volume']}",  # Customize this text as needed
+            marker=dict(
+                size=row['volume'] / 1000,  # Adjust the size as necessary
+                color='red',
+                symbol='x'
+            ),
+        ))
+
+# Update layout for better visibility
 fig.update_layout(
-    margin={"r":0,"t":0,"l":0,"b":0},
-    coloraxis_colorbar=dict(
-        title='Dinosaur Findings',
-        tickvals=[0, merged_data['dino_count'].max() / 2, merged_data['dino_count'].max()],
-        ticktext=['Low', 'Medium', 'High']
-    )
+    title_text='Dinosaur Findings and Fossil Fuel Production by Country',
+    geo=dict(
+        showland=True,
+        showcountries=True,
+        landcolor='rgb(217, 217, 217)',
+        countrycolor='rgb(204, 204, 204)',
+    ),
 )
 
-# Show the map
+# Show the figure
 fig.show()
-
