@@ -21,52 +21,7 @@ count_df.to_csv('dinosaur_country_counts.csv', index=False)
 
 # Print the sorted country counts to verify the operation was successful
 print(count_df)
-'''
-# ----- Cleaning Fossil Fuel Data -----
-# Attempt to load the fossil fuel data with UTF-8 encoding, falling back to latin1 if necessary
-try:
-    fuel_df = pd.read_csv('Fuel_production_vs_Consumption.csv', encoding='utf-8')
-except UnicodeDecodeError:
-    fuel_df = pd.read_csv('Fuel_production_vs_Consumption.csv', encoding='latin1')
 
-# List columns that are not required for further analysis
-columns_to_remove = [
-    "Gas consumption(m³)",
-    "Coal consumption(Ton)",
-    "Oil consumption(m³)",
-    "Gas consumption per capita(m³)",
-    "Coal consumption per capita(Ton)",
-    "Oil consumption per capita(m³)"
-]
-
-# Drop the unnecessary columns from the fossil fuel data
-fuel_df = fuel_df.drop(columns_to_remove, axis=1)
-
-# Aggregate the remaining data by 'Entity', which represents countries, excluding the 'World' entry
-grouped_df = fuel_df.groupby('Entity').sum()
-grouped_df = grouped_df.drop(index='World', errors='ignore')
-
-# Print the aggregated data to verify the operation was successful
-print(grouped_df)
-
-# Save the cleaned and aggregated fossil fuel data to a CSV file
-grouped_df.to_csv('Fuel_production_vs_consumption_modified.csv', index=False)
-
-# Sort the data by production metrics for different fuel types
-sorted_oil_df = grouped_df.sort_values(by='Oil production(m³)', ascending=False)
-sorted_gas_df = grouped_df.sort_values(by='Gas production(m³)', ascending=False)
-sorted_coal_df = grouped_df.sort_values(by='Coal production(Ton)', ascending=False)
-
-# Print the sorted data for each fuel type to verify the operation was successful
-print("Most oil production:")
-print(sorted_oil_df)
-
-print("\nMost gas production:")
-print(sorted_gas_df)
-
-print("\nMost coal production:")
-print(sorted_coal_df)
-'''
 
 # Load the CSV file into a DataFrame
 hackoil_df = pd.read_csv('hackOil.csv', skipinitialspace=True)
@@ -102,14 +57,18 @@ hackoil_df.to_csv('hackOil_cleaned.csv', index=False)
 
 
 #fix the line under
-hackoil_df_2020 = hackoil_df[hackoil_df['year'] == '2018']
+hackoil_df_2020 = hackoil_df[hackoil_df['year'] == '2020']
+usa_entry = hackoil_df_2020[hackoil_df_2020['iso3166'] == 'US']
+print("USA Entry:", usa_entry)
+
 #hackoil_df_2020 = hackoil_df_2020[hackoil_df_2020['dataType'] == 'production']
 
 
 
 
-oil_df_2020 = hackoil_df_2020[hackoil_df_2020['fossilFuelType'] == 'gas']
+oil_df_2020 = hackoil_df_2020[hackoil_df_2020['fossilFuelType'] == 'oil']
 oil_df_2020['volume'] = pd.to_numeric(oil_df_2020['volume'].str.replace(r'\D', ''), errors='coerce')
+oil_df_2020.dropna(subset=['volume'], inplace=True)
 
 unit_column = oil_df_2020['unit']
 
@@ -123,6 +82,8 @@ print(oil_df_2020)
 grouped_oil_2020 = oil_df_2020.groupby('iso3166')['volume'].sum().reset_index()
 grouped_oil_2020['unit'] = 'million barrel a day'
 print(grouped_oil_2020)
+usa_entry = grouped_oil_2020[grouped_oil_2020['iso3166'] == 'US']
+print("USA Entry:", usa_entry)
 sorted_grouped_oil_2020 = grouped_oil_2020.sort_values(by='volume', ascending=False)
 
 #sorted_oil_2020 = grouped_oil_2020.sort_values(by='volume', ascending=True)
@@ -130,7 +91,27 @@ sorted_grouped_oil_2020 = grouped_oil_2020.sort_values(by='volume', ascending=Fa
 
 # Print the sorted DataFrame
 print(sorted_grouped_oil_2020)
+usa_entry = sorted_grouped_oil_2020[sorted_grouped_oil_2020['iso3166'] == 'us']
+print("USA Entry:", usa_entry)
+country_counts = count_df.groupby('iso3166')['count'].sum().reset_index()
 
+print(country_counts)
+count_df['iso3166'] = count_df['iso3166'].str.strip()
+#sorted_grouped_oil_2020['iso3166'] = sorted_grouped_oil_2020['iso3166'].str.strip()
+count_df['iso3166'] = count_df['iso3166'].str.lower()
+print(count_df)
+
+
+merged_df = pd.merge(count_df, sorted_grouped_oil_2020, on='iso3166', how='inner')
+
+merged_df.to_csv('merged_data.csv', index=False)
+print(merged_df)
+print(sorted_grouped_oil_2020)
+
+missing_countries = sorted_grouped_oil_2020[~sorted_grouped_oil_2020['iso3166'].isin(count_df['iso3166'])]['iso3166']
+#print("Missing countries:", missing_countries)
+usa_entry = sorted_grouped_oil_2020[sorted_grouped_oil_2020['iso3166'] == 'us']
+print("USA Entry:", usa_entry)
 
 
 
