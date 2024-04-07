@@ -1,0 +1,8 @@
+In your terminal or command line, enter: pip install [package]
+Packages to install:
+- flask
+- pandas
+- numpy
+- plotly
+- matplotlib
+- re

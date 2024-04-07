@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Website's Title</title>
+    <!-- Include your stylesheet here -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        @import url('//fonts.googleapis.com/css?family=Josefin+Slab:400,700');
+        /* You can also include additional internal styles here */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="st-container">
+            <input type="radio" name="radio-set" checked="checked" id="st-control-1"/>
+            <a href="#st-panel-1">Dino Nuggies</a>
+            <input type="radio" name="radio-set" id="st-control-2"/>
+            <a href="#st-panel-2">About</a>
+            <input type="radio" name="radio-set" id="st-control-3"/>
+            <a href="#st-panel-3">Plots</a>
+            <input type="radio" name="radio-set" id="st-control-4"/>
+            <a href="#st-panel-4">Conclusion</a>
+            <input type="radio" name="radio-set" id="st-control-5"/>
+            <a href="#st-panel-5">References</a>
+            
+            <div class="st-scroll">
+                <section class="st-panel" id="st-panel-1">
+                    <div class="content-wrapper">
+                        <div class="left-column">
+                            <img src="{{ url_for('static', filename='images/DinoNuggies.png') }}" alt="Dino Nuggies" class="dino-image">
+                        </div>
+                        <div class="right-column">
+                            <div class="st-deco" data-icon="&#xf069;"></div>
+                            <h2>Dino Nuggies</h2>
+                            <p>Banksy adipisicing eiusmod banh mi sed. Squid stumptown est odd future nisi, commodo mlkshk pop-up adipisicing retro.</p>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="st-panel st-color" id="st-panel-2">
+                    <div class="st-deco" data-icon="&#xf118;"></div>
+                    <h2>About</h2>
+                    <div id="dino-plot"></div> <!-- Placeholder for Dinosaur plot -->
+                    <div id="fossil-fuel-plot"></div> <!-- Placeholder for Fossil Fuel plot -->
+                </section>
+                
+                <section class="st-panel" id="st-panel-3">
+                    <div class="st-deco" data-icon="&#xf0f4;"></div>
+                    <h2>Plots</h2>
+                    <p>Sint aute occaecat id vice. Post-ironic fap pork belly next level godard, id fanny pack williamsburg forage truffaut.</p>
+                </section>
+                
+                <section class="st-panel st-color" id="st-panel-4">
+                    <div class="st-deco" data-icon="&#xf06c;"></div>
+                    <h2>Conclusion</h2>
+                    <p>Mixtape fap leggings art party, butcher authentic farm-to-table you probably haven't heard of them do labore cosby sweater.</p>
+                </section>
+                
+                <section class="st-panel" id="st-panel-5">
+                    <div class="st-deco" data-icon="&#xf004;"></div>
+                    <h2>References</h2>
+                    <p>Fixie ad odd future polaroid dreamcatcher, nesciunt carles bicycle rights accusamus mcsweeney's mumblecore nulla irony.</p>
+                </section>
+            </div>
+        </div>
+    </div>
+    
+    <!-- You may include your Plotly.js here if needed -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</body>
+</html>
+
+    
