@@ -1,9 +1,9 @@
-from flask import Flask, jsonify, render_template
+'''from flask import Flask, jsonify, render_template
 import pandas as pd
 import plotly.express as px
 from plotly.io import to_html
 
-app = Flask(__name__)
+#app = Flask(__name__)
 
 # Load the data into Pandas DataFrames
 dino_counts = pd.read_csv('dinosaur_country_counts.csv')
@@ -28,7 +28,7 @@ def home():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
+'''
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -51,13 +51,22 @@ count_df = count_df.sort_values(by='count', ascending=False)
 count_df.to_csv('dinosaur_country_counts.csv', index=False)
 
 # Print the sorted country counts to verify the operation was successful
-print(count_df)
+
+count_df['iso3166'] = count_df['iso3166'].str.strip()
+
+count_df['iso3166'] = count_df['iso3166'].str.lower()
+#print(count_df)
+
 
 
 # Load the CSV file into a DataFrame
+
 hackoil_df = pd.read_csv('hackOil.csv', skipinitialspace=True)
+
 hackoil_df.drop(columns=['Unnamed: 10'], inplace=True)
-print(hackoil_df)
+#print(hackoil_df)
+#hackoil_df.drop(columns=['Unnamed: 10'], inplace=True)
+
 # Strip leading and trailing spaces from all string-type data
 for col in hackoil_df.columns:
     if hackoil_df[col].dtype == object:  # Check if the column is of string type
@@ -67,12 +76,15 @@ for col in hackoil_df.columns:
             hackoil_df[col] = hackoil_df[col].str.replace(',', '', regex=False)
 
 # Drop the 'subtype' column if it is empty or not needed
-print(hackoil_df)
-hackoil_df = hackoil_df.sort_values(by='dataType')
-print(hackoil_df)
+
+#hackoil_df = hackoil_df.sort_values(by='dataType')
+
 hackoil_df = hackoil_df[hackoil_df['dataType'] == 'PRODUCTION']
+#print(hackoil_df)
+
 hackoil_df.drop('dataType', axis=1, inplace=True, errors='ignore')
-print(hackoil_df)
+
+
 
 
 if 'subtype' in hackoil_df.columns:
@@ -83,70 +95,65 @@ columns_to_drop = ['subtype', 'quality', 'sourceId']
 hackoil_df.drop(columns_to_drop, axis=1, inplace=True, errors='ignore')
 
 # Save the cleaned DataFrame back to a CSV file
-hackoil_df.to_csv('hackOil_cleaned.csv', index=False)
+
+#print(hackoil_df)
 
 
 
-#fix the line under
+
 hackoil_df_2020 = hackoil_df[hackoil_df['year'] == '2020']
-usa_entry = hackoil_df_2020[hackoil_df_2020['iso3166'] == 'US']
-print("USA Entry:", usa_entry)
-
-#hackoil_df_2020 = hackoil_df_2020[hackoil_df_2020['dataType'] == 'production']
-
-
+#print(hackoil_df_2020)
 
 
 oil_df_2020 = hackoil_df_2020[hackoil_df_2020['fossilFuelType'] == 'oil']
-oil_df_2020['volume'] = pd.to_numeric(oil_df_2020['volume'].str.replace(r'\D', ''), errors='coerce')
-oil_df_2020.dropna(subset=['volume'], inplace=True)
+print(oil_df_2020)
+oil_df_2020['volume'] = oil_df_2020['volume'].str.replace(',', '')
+oil_df_2020['volume'] = oil_df_2020['volume'].str.replace(r'[,()]', '', regex=True)
+oil_df_2020['volume'] = pd.to_numeric(oil_df_2020['volume'])
 
 unit_column = oil_df_2020['unit']
 
-print(oil_df_2020)
+#print(oil_df_2020)
 #combine the 2 data frames best on the abreaviation here
 
 
-oil_df_2020['volume'] = oil_df_2020['volume'].apply(lambda x: int(re.sub(r'\D', '', str(x))))
-print(oil_df_2020)
+#oil_df_2020['volume'] = oil_df_2020['volume'].apply(lambda x: int(re.sub(r'\D', '', str(x))))
+#print(oil_df_2020)
 
 grouped_oil_2020 = oil_df_2020.groupby('iso3166')['volume'].sum().reset_index()
 grouped_oil_2020['unit'] = 'million barrel a day'
-print(grouped_oil_2020)
-usa_entry = grouped_oil_2020[grouped_oil_2020['iso3166'] == 'US']
-print("USA Entry:", usa_entry)
+#print(grouped_oil_2020)
+
 sorted_grouped_oil_2020 = grouped_oil_2020.sort_values(by='volume', ascending=False)
 
 #sorted_oil_2020 = grouped_oil_2020.sort_values(by='volume', ascending=True)
 
 
 # Print the sorted DataFrame
-print(sorted_grouped_oil_2020)
-usa_entry = sorted_grouped_oil_2020[sorted_grouped_oil_2020['iso3166'] == 'us']
-print("USA Entry:", usa_entry)
+#print(sorted_grouped_oil_2020)
+
 country_counts = count_df.groupby('iso3166')['count'].sum().reset_index()
 
-print(country_counts)
-count_df['iso3166'] = count_df['iso3166'].str.strip()
-#sorted_grouped_oil_2020['iso3166'] = sorted_grouped_oil_2020['iso3166'].str.strip()
-count_df['iso3166'] = count_df['iso3166'].str.lower()
-print(count_df)
+#print(country_counts)
+
 
 
 merged_df = pd.merge(count_df, sorted_grouped_oil_2020, on='iso3166', how='inner')
 
 merged_df.to_csv('merged_data.csv', index=False)
+#print(merged_df)
+merged_df.rename(columns={'iso3166': 'country'}, inplace=True)
 print(merged_df)
-print(sorted_grouped_oil_2020)
+merged_df.to_csv('merged_data.csv', index=False)
+#print(sorted_grouped_oil_2020)
 
-missing_countries = sorted_grouped_oil_2020[~sorted_grouped_oil_2020['iso3166'].isin(count_df['iso3166'])]['iso3166']
+
 #print("Missing countries:", missing_countries)
-usa_entry = sorted_grouped_oil_2020[sorted_grouped_oil_2020['iso3166'] == 'us']
-print("USA Entry:", usa_entry)
+
+
 
 
 
 # Links to data sources (for reference only, not executed as code)
-#https://fossilfuelregistry.org/datasets
 # https://paleobiodb.org/classic/displayDownloadGenerator
 # https://www.kaggle.com/datasets/shawkatsujon/worldwide-fuel-production-and-consumption
