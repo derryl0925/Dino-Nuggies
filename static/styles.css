@@ -285,7 +285,7 @@ a {
 	position: absolute;
 	text-align: center;
 	font-size: 32px; /* body text, default 16*/
-	line-height: 28px;
+	line-height: 30px;
 	color: #8b8b8b;
 	z-index: 2;
 	padding: 0;
