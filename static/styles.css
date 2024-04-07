@@ -414,6 +414,14 @@ a {
   	left: 1050px; /* Distance from the left of the parent element */
 }
 
+.custom-size-4 {
+    width: 900px; /* Or any other size */
+    height: auto; /* Maintain aspect ratio */
+	position: absolute;
+  	top: 550px; /* Distance from the top of the parent element */
+  	left: 600px; /* Distance from the left of the parent element */
+}
+
 .plots-container {
     display: flex;
     justify-content: space-around; /* Distributes space evenly around the items */
@@ -422,7 +430,7 @@ a {
     padding-top: 20px; /* Adds space between the text and the images */
 }
 
-.custom-size-1, .custom-size-2, .custom-size-3{
+.custom-size-1, .custom-size-2, .custom-size-3, .custom-size-4{
     max-width: 650px; /* Sets the maximum width for both images */
     height: auto; /* Maintains the aspect ratio */
     margin: 0 10px; /* Adds some horizontal space between the images */
