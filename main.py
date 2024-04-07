@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import re
 
 # Set the style for matplotlib plots
 plt.style.use('ggplot')
@@ -8,17 +9,19 @@ plt.style.use('ggplot')
 # ----- Cleaning Dinosaur Data -----
 # Load the dinosaur data, selecting only the 'cc' column which contains country codes
 dino_df = pd.read_csv('dinoData.csv', usecols=['cc'])
+dino_df = dino_df.rename(columns={'cc': 'iso3166'})
 
 # Count the occurrences of each country code and sort by this count in descending order
-count_df = dino_df.groupby('cc').size().reset_index(name='count')
+count_df = dino_df.groupby('iso3166').size().reset_index(name='count')
 count_df = count_df.sort_values(by='count', ascending=False)
+
 
 # Save the clean data with country occurrences to a CSV file
 count_df.to_csv('dinosaur_country_counts.csv', index=False)
 
 # Print the sorted country counts to verify the operation was successful
 print(count_df)
-
+'''
 # ----- Cleaning Fossil Fuel Data -----
 # Attempt to load the fossil fuel data with UTF-8 encoding, falling back to latin1 if necessary
 try:
@@ -63,10 +66,12 @@ print(sorted_gas_df)
 
 print("\nMost coal production:")
 print(sorted_coal_df)
+'''
 
 # Load the CSV file into a DataFrame
 hackoil_df = pd.read_csv('hackOil.csv', skipinitialspace=True)
-
+hackoil_df.drop(columns=['Unnamed: 10'], inplace=True)
+print(hackoil_df)
 # Strip leading and trailing spaces from all string-type data
 for col in hackoil_df.columns:
     if hackoil_df[col].dtype == object:  # Check if the column is of string type
@@ -80,11 +85,40 @@ if 'subtype' in hackoil_df.columns:
     hackoil_df.drop('subtype', axis=1, inplace=True)
 
 # Drop the specified columns
-columns_to_drop = ['subtype', 'unit', 'dataType', 'quality', 'sourceId']
+columns_to_drop = ['subtype', 'dataType', 'quality', 'sourceId']
 hackoil_df.drop(columns_to_drop, axis=1, inplace=True, errors='ignore')
 
 # Save the cleaned DataFrame back to a CSV file
 hackoil_df.to_csv('hackOil_cleaned.csv', index=False)
+
+
+
+
+
+hackoil_df_2020 = hackoil_df[hackoil_df['year'] == '2019']
+
+
+
+
+oil_df_2020 = hackoil_df_2020[hackoil_df_2020['fossilFuelType'] == 'oil']
+
+print(oil_df_2020)
+#combine the 2 data frames best on the abreaviation here
+
+
+oil_df_2020['volume'] = oil_df_2020['volume'].apply(lambda x: int(re.sub(r'\D', '', str(x))))
+
+grouped_oil_2020 = oil_df_2020.groupby('iso3166')['volume'].sum().reset_index()
+sorted_grouped_oil_2020 = grouped_oil_2020.sort_values(by='volume', ascending=False)
+
+#sorted_oil_2020 = grouped_oil_2020.sort_values(by='volume', ascending=True)
+
+
+# Print the sorted DataFrame
+print(sorted_grouped_oil_2020)
+
+
+
 
 # Links to data sources (for reference only, not executed as code)
 # https://paleobiodb.org/classic/displayDownloadGenerator
