@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 import pandas as pd
 
 app = Flask(__name__)
@@ -10,7 +10,7 @@ fossil_fuel_production = pd.read_csv('hackOil_cleaned.csv')
 @app.route('/')
 def home():
     # You can return an HTML home page here if you like
-    return "index.html"
+    return render_template('index.html')
 
 @app.route('/api/dino_counts')
 def dino_counts_api():
