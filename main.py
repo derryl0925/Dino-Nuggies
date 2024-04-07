@@ -21,6 +21,15 @@ df = df.drop(columns_to_remove, axis=1)
 # Save the modified DataFrame back to a CSV file
 df.to_csv('DinoNuggieFindings_modified.csv', index=False)
 
+df = pd.read_csv('DinoNuggieFindings_modified.csv')
+
+# Combine 'cc' and 'state' into a new 'location' column
+df['location'] = df['cc'] + ', ' + df['state']
+
+# Dino findings by location
+location_distribution = df['location'].value_counts()
+print(location_distribution)
+
 # Cleaning fossil fuel data
 # Load the CSV file into a DataFrame
 #df = pd.read_csv('Fuel_production_vs_Consumption.csv')
