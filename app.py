@@ -169,5 +169,6 @@ fig.show()
 
 
 # Links to data sources (for reference only, not executed as code)
+#https://fossilfuelregistry.org/datasets
 # https://paleobiodb.org/classic/displayDownloadGenerator
 # https://www.kaggle.com/datasets/shawkatsujon/worldwide-fuel-production-and-consumption
