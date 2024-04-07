@@ -64,20 +64,27 @@ print(sorted_gas_df)
 print("\nMost coal production:")
 print(sorted_coal_df)
 
-# Load the CSV file into a DataFrame, addressing the DtypeWarning by setting low_memory=False
-hackoil_df = pd.read_csv('hackOil.csv', low_memory=False)
+# Load the CSV file into a DataFrame
+hackoil_df = pd.read_csv('hackOil.csv', skipinitialspace=True)
 
-# Check the actual column names in the DataFrame
-print(hackoil_df.columns)
+# Strip leading and trailing spaces from all string-type data
+for col in hackoil_df.columns:
+    if hackoil_df[col].dtype == object:  # Check if the column is of string type
+        hackoil_df[col] = hackoil_df[col].str.strip()  # Remove leading and trailing spaces
+        if col == 'year':
+            # Remove commas from the 'year' column
+            hackoil_df[col] = hackoil_df[col].str.replace(',', '', regex=False)
 
-# Columns to be removed (update this list if the actual names are different)
-columns_to_remove = ["unit", "dataType", "quality", "sourceID", "grade"]
+# Drop the 'subtype' column if it is empty or not needed
+if 'subtype' in hackoil_df.columns:
+    hackoil_df.drop('subtype', axis=1, inplace=True)
 
-# Make sure the columns you want to remove actually exist in the DataFrame
-existing_columns = [col for col in columns_to_remove if col in hackoil_df.columns]
+# Drop the specified columns
+columns_to_drop = ['subtype', 'unit', 'dataType', 'quality', 'sourceId']
+hackoil_df.drop(columns_to_drop, axis=1, inplace=True, errors='ignore')
 
-# Remove the specified columns that exist
-hackoil_df = hackoil_df.drop(existing_columns, axis=1)
+# Save the cleaned DataFrame back to a CSV file
+hackoil_df.to_csv('hackOil_cleaned.csv', index=False)
 
 # Links to data sources (for reference only, not executed as code)
 # https://paleobiodb.org/classic/displayDownloadGenerator
