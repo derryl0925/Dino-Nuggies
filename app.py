@@ -80,7 +80,6 @@ for col in hackoil_df.columns:
 #hackoil_df = hackoil_df.sort_values(by='dataType')
 
 hackoil_df = hackoil_df[hackoil_df['dataType'] == 'PRODUCTION']
-hackoil_df = hackoil_df[hackoil_df['dataType'] == 'PROJECTION']
 #print(hackoil_df)
 
 hackoil_df.drop('dataType', axis=1, inplace=True, errors='ignore')
@@ -102,17 +101,17 @@ hackoil_df.drop(columns_to_drop, axis=1, inplace=True, errors='ignore')
 
 
 
-hackoil_df_2020 = hackoil_df[hackoil_df['year'] == '2020']
+hackoil_df_2025 = hackoil_df[hackoil_df['year'] == '2020']
 #print(hackoil_df_2020)
 
 
-oil_df_2020 = hackoil_df_2020[hackoil_df_2020['fossilFuelType'] == 'oil']
-print(oil_df_2020)
-oil_df_2020['volume'] = oil_df_2020['volume'].str.replace(',', '')
-oil_df_2020['volume'] = oil_df_2020['volume'].str.replace(r'[,()]', '', regex=True)
-oil_df_2020['volume'] = pd.to_numeric(oil_df_2020['volume'])
+oil_df_2025 = hackoil_df_2025[hackoil_df_2025['fossilFuelType'] == 'oil']
+print(oil_df_2025)
+oil_df_2025['volume'] = oil_df_2025['volume'].str.replace(',', '')
+oil_df_2025['volume'] = oil_df_2025['volume'].str.replace(r'[,()]', '', regex=True)
+oil_df_2025['volume'] = pd.to_numeric(oil_df_2025['volume'])
 
-unit_column = oil_df_2020['unit']
+unit_column = oil_df_2025['unit']
 
 #print(oil_df_2020)
 #combine the 2 data frames best on the abreaviation here
@@ -121,11 +120,11 @@ unit_column = oil_df_2020['unit']
 #oil_df_2020['volume'] = oil_df_2020['volume'].apply(lambda x: int(re.sub(r'\D', '', str(x))))
 #print(oil_df_2020)
 
-grouped_oil_2020 = oil_df_2020.groupby('iso3166')['volume'].sum().reset_index()
-grouped_oil_2020['unit'] = 'million barrel a day'
+grouped_oil_2025 = oil_df_2025.groupby('iso3166')['volume'].sum().reset_index()
+grouped_oil_2025['unit'] = 'million barrel a day'
 #print(grouped_oil_2020)
 
-sorted_grouped_oil_2020 = grouped_oil_2020.sort_values(by='volume', ascending=False)
+sorted_grouped_oil_2025 = grouped_oil_2025.sort_values(by='volume', ascending=False)
 
 #sorted_oil_2020 = grouped_oil_2020.sort_values(by='volume', ascending=True)
 
@@ -139,13 +138,13 @@ country_counts = count_df.groupby('iso3166')['count'].sum().reset_index()
 
 
 
-merged_df = pd.merge(count_df, sorted_grouped_oil_2020, on='iso3166', how='inner')
+merged_df_2025 = pd.merge(count_df, sorted_grouped_oil_2025, on='iso3166', how='inner')
 
-merged_df.to_csv('merged_data.csv', index=False)
+merged_df_2025.to_csv('merged_data.csv', index=False)
 #print(merged_df)
-merged_df.rename(columns={'iso3166': 'country'}, inplace=True)
-print(merged_df)
-merged_df.to_csv('merged_data.csv', index=False)
+merged_df_2025.rename(columns={'iso3166': 'country'}, inplace=True)
+print(merged_df_2025)
+merged_df_2025.to_csv('merged_data_2025.csv', index=False)
 #print(sorted_grouped_oil_2020)
 
 
@@ -158,3 +157,4 @@ merged_df.to_csv('merged_data.csv', index=False)
 
 # Links to data sources (for reference only, not executed as code)
 # https://paleobiodb.org/classic/displayDownloadGenerator
+# https://fossilfuelregistry.org/datasets
