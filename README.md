@@ -8,6 +8,7 @@ Our project, "Dino Nuggies," ventures into the fascinating correlation between t
 
 Our predictive plot for 2025, based on data from 2020 and the quantity of dinosaur bones found in each country, aims to provide an insightful forecast into the future of energy resources.
 
+**[Demo](https://youtu.be/iqmosqjwBrA)**
 ## Setup
 Your machine will need numpy, pandas, flask, seaborn, plotly, and matplotlib to run this code. To get any of these libraries, you can just `pip install [insert library here]` in a terminal window. To run the code, first pull the github to your computer and then navigate to the folder where app.py is. Then open terminal and run the command `python3 app.py`. This will direct you to a localhost website where you can interact with the product.
 
